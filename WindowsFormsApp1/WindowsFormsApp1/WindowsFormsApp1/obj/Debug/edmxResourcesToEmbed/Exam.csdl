@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ExamModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Clients">
+    <Key>
+      <PropertyRef Name="PassNum" />
+    </Key>
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Surname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="PassNum" Type="Int64" Nullable="false" />
+    <Property Name="PassSeries" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="PhoneNumber" Relationship="Self.FK__PhoneNumb__Clien__35BCFE0A" FromRole="Clients" ToRole="PhoneNumber" />
+  </EntityType>
+  <EntityType Name="PhoneNumber">
+    <Key>
+      <PropertyRef Name="Num" />
+    </Key>
+    <Property Name="Num" Type="Int64" Nullable="false" />
+    <Property Name="ClientId" Type="Int64" />
+    <Property Name="TariffId" Type="Int32" />
+    <NavigationProperty Name="Clients" Relationship="Self.FK__PhoneNumb__Clien__35BCFE0A" FromRole="PhoneNumber" ToRole="Clients" />
+    <NavigationProperty Name="Tariff" Relationship="Self.FK__PhoneNumb__Tarif__286302EC" FromRole="PhoneNumber" ToRole="Tariff" />
+    <Property Name="Balance" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+  </EntityType>
+  <EntityType Name="Tariff">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="MonthPayment" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+    <Property Name="ConnectPayment" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="PhoneNumber" Relationship="Self.FK__PhoneNumb__Tarif__286302EC" FromRole="Tariff" ToRole="PhoneNumber" />
+  </EntityType>
+  <Association Name="FK__PhoneNumb__Clien__35BCFE0A">
+    <End Role="Clients" Type="Self.Clients" Multiplicity="0..1" />
+    <End Role="PhoneNumber" Type="Self.PhoneNumber" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Clients">
+        <PropertyRef Name="PassNum" />
+      </Principal>
+      <Dependent Role="PhoneNumber">
+        <PropertyRef Name="ClientId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PhoneNumb__Tarif__286302EC">
+    <End Role="Tariff" Type="Self.Tariff" Multiplicity="0..1" />
+    <End Role="PhoneNumber" Type="Self.PhoneNumber" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Tariff">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PhoneNumber">
+        <PropertyRef Name="TariffId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="ExamEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Clients" EntityType="Self.Clients" />
+    <EntitySet Name="PhoneNumber" EntityType="Self.PhoneNumber" />
+    <EntitySet Name="Tariff" EntityType="Self.Tariff" />
+    <AssociationSet Name="FK__PhoneNumb__Clien__35BCFE0A" Association="Self.FK__PhoneNumb__Clien__35BCFE0A">
+      <End Role="Clients" EntitySet="Clients" />
+      <End Role="PhoneNumber" EntitySet="PhoneNumber" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PhoneNumb__Tarif__286302EC" Association="Self.FK__PhoneNumb__Tarif__286302EC">
+      <End Role="Tariff" EntitySet="Tariff" />
+      <End Role="PhoneNumber" EntitySet="PhoneNumber" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
